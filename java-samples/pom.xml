@@ -24,7 +24,7 @@
     </build>
 
     <dependencies>
-        <!-- ugly, but we want to depend on SDK jar without installing it -->
+        <!-- Temporarily we depend on SDK jar without installing it -->
         <dependency>
             <groupId>com.codota</groupId>
             <artifactId>sdk</artifactId>
