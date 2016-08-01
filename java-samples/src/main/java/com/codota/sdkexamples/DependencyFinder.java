@@ -61,7 +61,7 @@ public class DependencyFinder {
                 try {
                     DependencyInfo dependencies = codotaClient.getDependencies(filepath, artifactName);
                     for (DependencyInfo.InternalDependency dep : dependencies.getInternalDeps()) {
-                        System.out.println("Internal dependency on " + dep.getFilepath() + " in artifact " + dep.getArtifactName());
+                        System.out.println("Internal dependency on " + dep.getFilepath() + " in artifacts " + dep.getArtifactNames());
                     }
                     for (String extDep : dependencies.getExternalDeps()) {
                         System.out.println("External dependency on " + extDep);
