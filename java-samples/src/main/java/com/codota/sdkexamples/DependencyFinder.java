@@ -66,6 +66,12 @@ public class DependencyFinder {
                     for (String extDep : dependencies.getExternalDeps()) {
                         System.out.println("External dependency on " + extDep);
                     }
+                    if (!dependencies.getExternalImportOnlyDeps().isEmpty()) {
+                        for (String extDep : dependencies.getExternalImportOnlyDeps()) {
+                            System.out.println("External Import-only dependency on " + extDep);
+                        }
+                    }
+
                 } catch (CodotaHttpException e) {
 
                     // We may get an 404 if the artifact contains non-source files
