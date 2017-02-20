@@ -76,7 +76,7 @@ public class ArtifactReader {
 
     public static void main(String[] args) {
         ArtifactReader instance = new ArtifactReader(CodotaSDKSettings.VALID_TOKEN, CodotaSDKSettings.CODE_PACK);
-        instance.readArtifactInfo("joda-time");
+        instance.readArtifactInfo("com.squareup.okhttp3.sample.guide");
     }
 
 
