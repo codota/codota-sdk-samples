@@ -23,6 +23,8 @@ import com.codota.service.connector.ApacheServiceConnector;
 import com.codota.service.connector.ConnectorSettings;
 import com.codota.service.model.DependencyInfo;
 
+import java.util.Collection;
+
 public class DependencyFinder {
 
     /**
@@ -63,13 +65,15 @@ public class DependencyFinder {
                     for (DependencyInfo.InternalDependency dep : dependencies.getInternalDeps()) {
                         System.out.println("Internal dependency on " + dep.getFilepath() + " in artifacts " + dep.getArtifactNames());
                     }
+                    for (Collection<DependencyInfo.OptionalInternalDependency> group: dependencies.getInternalDepsExtended()) {
+                        System.out.println("Internal dependency on group " + group);
+                    }
+
                     for (String extDep : dependencies.getExternalDeps()) {
                         System.out.println("External dependency on " + extDep);
                     }
-                    if (!dependencies.getExternalImportOnlyDeps().isEmpty()) {
-                        for (String extDep : dependencies.getExternalImportOnlyDeps()) {
-                            System.out.println("External Import-only dependency on " + extDep);
-                        }
+                    for (String extDep : dependencies.getExternalImportOnlyDeps()) {
+                        System.out.println("External Import-only dependency on " + extDep);
                     }
 
                 } catch (CodotaHttpException e) {
