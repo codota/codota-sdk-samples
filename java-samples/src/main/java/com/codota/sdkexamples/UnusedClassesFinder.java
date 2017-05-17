@@ -51,21 +51,28 @@ public class UnusedClassesFinder {
 
     public static void main(String[] args) {
         UnusedClassesFinder instance = new UnusedClassesFinder(CodotaSDKSettings.VALID_TOKEN, CodotaSDKSettings.CODE_PACK);
-        instance.findUnusedClasses("okhttp");
+        try {
+            instance.findUnusedClasses("com.squareup.okhttp.mockwebserver");
+        } catch (CodotaHttpException e) {
+            e.printStackTrace();
+        } catch (CodotaConnectionException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void findUnusedClasses(String prefix) {
-        Map<String, String> classes = getClassesByPrefix(prefix);
-        System.out.printf("Found %d classes for prefix %s\n", classes.size(), prefix);
+    public void findUnusedClasses(String artifactName) throws CodotaHttpException, CodotaConnectionException {
+        List<String> classes = codotaClient.allClassesForArtifact(artifactName);
+        System.out.printf("Found %d classes for artifact %s\n", classes.size(), artifactName);
         int cnt = 0;
-        for (String classKey : classes.keySet()) {
+        for (String klass : classes) {
             cnt++;
+            System.out.println("Checking class " + klass);
             if (cnt % 100 == 0) {
                 System.out.printf("Checking class %d/%d\n", cnt, classes.size());
             }
-            boolean isUsed = isUsedByOtherClasses(classKey);
+            boolean isUsed = isUsedByOtherClasses(klass);
             if (!isUsed) {
-                System.out.printf("Potentially unused: %s\n",  classes.get(classKey));
+                System.out.printf("Potentially unused: %s\n",  klass);
             }
         }
 
@@ -82,34 +89,14 @@ public class UnusedClassesFinder {
     }
 
 
-    /*
-     * Get classes (internal names-->nice name) by prefix (in nice name)
-     */
-    private Map<String, String> getClassesByPrefix(String prefix) {
-        try {
-            Map<String, String> classes = new HashMap<String, String>();
-            XRefTypeaheadResult xr = codotaClient.xreftypeahead(prefix);
-
-            // We're reversing the map returned by the api
-            for (Map.Entry<String, XRefTypeaheadInfo > entry : xr.entrySet()) {
-                classes.put(entry.getValue().key, entry.getKey());
-            }
-            return classes;
-        } catch (CodotaHttpException e) {
-            e.printStackTrace();
-        } catch (CodotaConnectionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 
-    private boolean isUsedByOtherClasses(String classKey) {
-
+    private boolean isUsedByOtherClasses(String className) throws CodotaHttpException, CodotaConnectionException {
+        String classKey = "L" + className + ";";
         for (Bookmark ref : getReferences(classKey)) {
 
             // Checking whether this reference is from a different class
-            if (!classKey.equals("L" + ref.resourceFullyQualifiedName + ";")) {
+            if (!className.equals(ref.resourceFullyQualifiedName)) {
                 return true;
             }
         }
@@ -126,7 +113,7 @@ public class UnusedClassesFinder {
      * The classKey parameter should be an internal class name, for example: "Ljava/util/concurrent/BlockingQueue;"
      * You can obtain the internal class name for a class using the xreftypeahead API.
      */
-    private List<Bookmark> getReferences(String classKey) {
+    private List<Bookmark> getReferences(String classKey) throws CodotaHttpException, CodotaConnectionException {
         Map<String, String> props = new HashMap<String, String>();
         props.put("all", "false");
         props.put("classKey", classKey);
@@ -134,15 +121,8 @@ public class UnusedClassesFinder {
         props.put("type", "CLASS");
         props.put("codePack", CodotaSDKSettings.CODE_PACK);
 
-        try {
-            CrossRefResults cr = codotaClient.searchCrossRef(props);
-            return cr.bookmarks;
-        } catch (CodotaHttpException e) {
-            e.printStackTrace();
-        } catch (CodotaConnectionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        CrossRefResults cr = codotaClient.searchCrossRef(props);
+        return cr.bookmarks;
     }
 
 
