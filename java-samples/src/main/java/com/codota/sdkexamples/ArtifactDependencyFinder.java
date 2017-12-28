@@ -20,6 +20,7 @@ import com.codota.service.client.CodotaConnectionException;
 import com.codota.service.client.CodotaHttpException;
 import com.codota.service.client.SearchClient;
 import com.codota.service.connector.ApacheServiceConnector;
+import com.codota.service.connector.ConnectorSettings;
 import com.codota.service.model.DependencyInfo;
 
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class ArtifactDependencyFinder {
 
 
     public ArtifactDependencyFinder(String token, String codePack) {
-//        ConnectorSettings.setHost(ConnectorSettings.Host.LOCAL);
+        ConnectorSettings.setHost(ConnectorSettings.Host.GATEWAY);
         codotaClient = SearchClient.client(ApacheServiceConnector.instance());
         assert codotaClient != null;
         codotaClient.setDefaultCodePack(codePack);

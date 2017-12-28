@@ -35,7 +35,7 @@ public class DependencyFinder {
 
 
     public DependencyFinder(String token, String codePack) {
-//        ConnectorSettings.setHost(ConnectorSettings.Host.LOCAL);
+        ConnectorSettings.setHost(ConnectorSettings.Host.GATEWAY);
         codotaClient = SearchClient.client(ApacheServiceConnector.instance());
         assert codotaClient != null;
         codotaClient.setDefaultCodePack(codePack);
