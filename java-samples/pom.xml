@@ -30,19 +30,16 @@
     </build>
 
     <dependencies>
-        <!-- Temporarily we depend on SDK jar without installing it -->
-        <dependency>
-            <groupId>com.codota</groupId>
-            <artifactId>sdk</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/codota_sdk.jar</systemPath>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codota</groupId>
+            <artifactId>codota-sdk-java</artifactId>
+            <version>1.0.7</version>
         </dependency>
     </dependencies>
 </project>
