@@ -23,7 +23,7 @@ import com.codota.service.connector.ApacheServiceConnector;
 import com.codota.service.connector.ConnectorSettings;
 import com.codota.service.model.DependencyInfo;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class ArtifactDependencyFinder {
@@ -59,8 +59,8 @@ public class ArtifactDependencyFinder {
 
     public void processArtifact(String artifactName) {
         try {
-            Map<String, DependencyInfo> deps = codotaClient.getArtifactDependencies(artifactName);
-            deps.entrySet().forEach(dep -> {
+            List<Map.Entry<String, DependencyInfo>> deps = codotaClient.getArtifactDependencies(artifactName);
+            deps.forEach(dep -> {
                 if (dep.getValue() != null) {
                     System.out.println(dep.getKey() + ": number of internal deps =" + dep.getValue().getInternalDeps().size());
                 }
